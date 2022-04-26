@@ -3,6 +3,7 @@ package com.kirdow.mentioned.config;
 
 /*
  * Copyright (c) 2021 magistermaks
+ * Slightly modified by Kirdow 2022 (original mod credit to Kaupenjoe https://youtu.be/w2wyfFnPPmY?t=73 )
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -123,11 +124,14 @@ public class SimpleConfig {
         }
     }
 
+    // Modification by Kirdow (original mod by Kaupenjoe 1:23 - 2:07 @ https://youtu.be/w2wyfFnPPmY?t=73 )
     private void parseConfigEntry( String entry, int line ) {
         if( !entry.isEmpty() && !entry.startsWith( "#" ) ) {
             String[] parts = entry.split("=", 2);
             if( parts.length == 2 ) {
-                config.put( parts[0], parts[1] );
+                // Recognizes comments after a value
+                String temp = parts[1].split(" #")[0];
+                config.put( parts[0], temp );
             }else{
                 throw new RuntimeException("Syntax error in config file on line " + line + "!");
             }
