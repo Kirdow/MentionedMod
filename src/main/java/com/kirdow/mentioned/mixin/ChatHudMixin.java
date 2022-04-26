@@ -57,6 +57,9 @@ public class ChatHudMixin {
                 baseText.setStyle(style);
             }
             PingSound.playPingSound();
+            if (ModConfig.DELAY > 0) {
+                Mentioned.skip(ModConfig.DELAY);
+            }
         }
 
         return text;

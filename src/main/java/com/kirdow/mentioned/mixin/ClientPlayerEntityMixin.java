@@ -12,6 +12,6 @@ public class ClientPlayerEntityMixin {
 
     @Inject(method = "sendChatMessage(Ljava/lang/String;)V", at = @At("HEAD"))
     private void chatMessageHook(CallbackInfo ci) {
-        Mentioned.skip();
+        Mentioned.skip(1000L);
     }
 }

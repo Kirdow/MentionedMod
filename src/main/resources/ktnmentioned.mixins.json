@@ -7,7 +7,6 @@
   ],
   "client": [
     "ClientPlayerEntityMixin",
-    "MentionedMixin",
     "ChatHudMixin"
   ],
   "injectors": {

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 public class Mentioned implements ModInitializer {
 	public static final String MOD_ID = "ktnmentioned";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	
+
 	@Override
 	public void onInitialize() {
 		ModConfig.registerConfig();
@@ -16,9 +16,9 @@ public class Mentioned implements ModInitializer {
 
 	private static long skip = -1L;
 	private static final Object skipMutex = new Object();
-	public static void skip() {
+	public static void skip(long delay) {
 		synchronized (skipMutex) {
-			skip = System.currentTimeMillis() + 1000L;
+			skip = System.currentTimeMillis() + delay;
 		}
 	}
 	public static boolean skips() {

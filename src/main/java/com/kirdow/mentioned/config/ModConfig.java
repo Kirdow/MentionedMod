@@ -14,6 +14,8 @@ public class ModConfig {
     public static List<String> FILTERS;
     public static boolean FILTER_SELF;
 
+    public static long DELAY;
+
     public static Formatting COLOR;
 
     public static boolean STYLE_COLOR;
@@ -43,6 +45,10 @@ public class ModConfig {
         configs.addKeyValuePair("key.filter.self", true, "This will also include your playername in the filter");
         configs.skip();
 
+        configs.addComment("This is the delay that will be used to limit amount of pings at once!");
+        configs.addKeyValuePair("key.delay", 500, "Delay is milliseconds (0=disabled)");
+        configs.skip();
+
         configs.addComment("This is the color a message will have if a message match the filter.");
         configs.addKeyValuePair("key.color", "gold", "Supported colors are: aqua, black, blue, dark aqua, dark blue, dark gray, dark grey, dark green, dark purple, dark red, gold, gray, grey, green, light purple, red and yellow.");
         configs.skip();
@@ -58,6 +64,7 @@ public class ModConfig {
     private static void assignConfig() {
         FILTERS = getNamesFromConfig(CONFIG.getOrDefault("key.filter", ""));
         FILTER_SELF = CONFIG.getOrDefault("key.filter.self", true);
+        DELAY = CONFIG.getOrDefault("key.delay", 500);
         COLOR = getColorFromConfig(CONFIG.getOrDefault("key.color", "gold"));
         STYLE_COLOR = CONFIG.getOrDefault("key.style.color", true);
         STYLE_BOLD = CONFIG.getOrDefault("key.style.bold", true);
