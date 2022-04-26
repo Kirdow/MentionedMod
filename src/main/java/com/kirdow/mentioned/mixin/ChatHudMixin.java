@@ -2,6 +2,7 @@ package com.kirdow.mentioned.mixin;
 
 import com.kirdow.mentioned.Mentioned;
 import com.kirdow.mentioned.PingSound;
+import com.kirdow.mentioned.config.ModConfig;
 import com.kirdow.mentioned.util.Ref;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
@@ -41,11 +42,17 @@ public class ChatHudMixin {
         String playerName = player.getName().getString();
 
         List<String> names = new ArrayList<>();
-        names.add(playerName);
+        names.addAll(ModConfig.FILTERS);
+        if (ModConfig.FILTER_SELF)
+            names.add(playerName);
 
         if (names.stream().map(p -> p.toLowerCase()).anyMatch(p -> rawText.contains(p))) {
             Style style = text.getStyle();
-            style = style.withColor(Formatting.GOLD);
+            if (ModConfig.STYLE_COLOR) style = style.withColor(ModConfig.COLOR);
+            if (ModConfig.STYLE_BOLD) style = style.withBold(true);
+            if (ModConfig.STYLE_ITALIC) style = style.withItalic(true);
+            if (ModConfig.STYLE_STRIKETHROUGH) style = style.withStrikethrough(true);
+            if (ModConfig.STYLE_UNDERLINE) style = style.withUnderline(true);
             if (text instanceof BaseText baseText) {
                 baseText.setStyle(style);
             }
