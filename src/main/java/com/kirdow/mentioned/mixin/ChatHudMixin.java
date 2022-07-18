@@ -3,22 +3,18 @@ package com.kirdow.mentioned.mixin;
 import com.kirdow.mentioned.Mentioned;
 import com.kirdow.mentioned.PingSound;
 import com.kirdow.mentioned.config.ModConfig;
-import com.kirdow.mentioned.util.Ref;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.BaseText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 @Mixin(ChatHud.class)
 public class ChatHudMixin {
@@ -29,15 +25,13 @@ public class ChatHudMixin {
             return text;
         }
 
-        Mentioned.LOGGER.info("ADD MESSAGE MOD");
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            Mentioned.LOGGER.info("NO PLAYER");
+            Mentioned.LOGGER.info("No player found");
             return text;
         }
         String rawText = text.getString().toLowerCase();
-        Mentioned.LOGGER.info("Raw Text: \"{}\"!", rawText);
 
         String playerName = player.getName().getString();
 
@@ -53,8 +47,8 @@ public class ChatHudMixin {
             if (ModConfig.STYLE_ITALIC) style = style.withItalic(true);
             if (ModConfig.STYLE_STRIKETHROUGH) style = style.withStrikethrough(true);
             if (ModConfig.STYLE_UNDERLINE) style = style.withUnderline(true);
-            if (text instanceof BaseText baseText) {
-                baseText.setStyle(style);
+            if (text instanceof MutableText mutableText) {
+                mutableText.setStyle(style);
             }
             PingSound.playPingSound();
             if (ModConfig.DELAY > 0) {
