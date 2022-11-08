@@ -24,7 +24,8 @@ package com.kirdow.mentioned.config;
  * THE SOFTWARE.
  */
 
-import net.fabricmc.loader.api.FabricLoader;
+
+import com.kirdow.mentioned.Mentioned;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -100,7 +101,7 @@ public class SimpleConfig {
      * @return new config request object
      */
     public static ConfigRequest of( String filename ) {
-        Path path = FabricLoader.getInstance().getConfigDir();
+        Path path = Mentioned.getModPath();
         return new ConfigRequest( path.resolve( filename + ".properties" ).toFile(), filename );
     }
 

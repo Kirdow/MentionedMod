@@ -1,14 +1,15 @@
 package com.kirdow.mentioned.mixin;
 
+import com.kirdow.mentioned.Logger;
 import com.kirdow.mentioned.Mentioned;
 import com.kirdow.mentioned.PingSound;
 import com.kirdow.mentioned.config.ModConfig;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -16,23 +17,23 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mixin(ChatHud.class)
-public class ChatHudMixin {
+@Mixin(ChatComponent.class)
+public class ChatComponentMixin {
 
-    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"), ordinal = 0)
-    private Text modifyAddMessageText(Text text) {
+    @ModifyVariable(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;ILnet/minecraft/client/GuiMessageTag;Z)V", at = @At("HEAD"), ordinal = 0)
+    private Component modifyAddMessageText(Component text) {
         if (Mentioned.skips()) {
             return text;
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.player;
         if (player == null) {
-            Mentioned.LOGGER.info("No player found");
+            Logger.info("No player found");
             return text;
         }
-        String rawText = text.getString().toLowerCase();
 
+        String rawText = text.getString().toLowerCase();
         String playerName = player.getName().getString();
 
         List<String> names = new ArrayList<>();
@@ -46,8 +47,8 @@ public class ChatHudMixin {
             if (ModConfig.STYLE_BOLD) style = style.withBold(true);
             if (ModConfig.STYLE_ITALIC) style = style.withItalic(true);
             if (ModConfig.STYLE_STRIKETHROUGH) style = style.withStrikethrough(true);
-            if (ModConfig.STYLE_UNDERLINE) style = style.withUnderline(true);
-            if (text instanceof MutableText mutableText) {
+            if (ModConfig.STYLE_UNDERLINE) style = style.withUnderlined(true);
+            if (text instanceof MutableComponent mutableText) {
                 mutableText.setStyle(style);
             }
             PingSound.playPingSound();

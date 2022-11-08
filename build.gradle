@@ -1,72 +1,102 @@
-plugins {
-	id 'fabric-loom' version '1.0-SNAPSHOT'
-	id 'maven-publish'
+buildscript {
+	repositories {
+		maven { url = 'https://maven.minecraftforge.net/' }
+		mavenCentral()
+	}
+	dependencies {
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+		classpath 'org.spongepowered:mixingradle:0.7.+'
+	}
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
 
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
+def minecraftVersion = "1.19.2"
+def modVersion = "1.1"
 
-repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
+version = "${minecraftVersion}-${modVersion}"
+group = 'com.kirdow.mentioned'
+archivesBaseName = 'Mentioned-Forge'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
+sourceSets {
+	main {
+		java {
+			exclude 'com/kirdow/mentioned/util/reflect'
+		}
+
+		resources {
+			exclude 'fabric.mod.json'
+		}
+	}
+}
+
+mixin {
+	add sourceSets.main, 'ktnmentioned.mixins.refmap.json'
+	config 'ktnmentioned.mixins.json'
+}
+
+minecraft {
+	mappings channel: 'official', version: '1.19.2'
+
+	runs {
+		client {
+			workingDirectory project.file('run')
+
+			property 'forge.logging.markers', 'REGISTRIES'
+			property 'forge.logging.console.level', 'debug'
+
+			mods {
+				ktnmentioned {
+					source sourceSets.main
+				}
+			}
+		}
+
+		server {
+			workingDirectory project.file('run')
+
+			property 'forge.logging.markers', 'REGISTRIES'
+			property 'forge.logging.console.level', 'debug'
+
+			mods {
+				ktnmentioned {
+					source sourceSets.main
+				}
+			}
+		}
+	}
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-	it.options.release = 17
-}
-
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
+	minecraft 'net.minecraftforge:forge:1.19.2-43.1.47'
+	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
+	manifest.attributes([
+	        "Specification-Title": "MentionedMod",
+			"Specification-Vendor": "Kirdow",
+			"Specification-Version": "${project.version}",
+			"Implementation-Title": project.name,
+			"Implementation-Version": "${project.version}",
+			"Implementation-Vendor": "Kirdow",
+			"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+	])
+
+	finalizedBy 'reobfJar'
 }
 
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
+task srcJar(type: Jar) {
+	archiveClassifier.set("src")
+	from sourceSets.main.allJava
+}
 
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-	}
+artifacts {
+	archives srcJar
 }

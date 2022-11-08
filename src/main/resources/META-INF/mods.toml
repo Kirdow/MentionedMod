@@ -1,0 +1,10 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="MIT"
+
+[[mods]]
+modId="ktnmentioned"
+version="1.19.2-1.1"
+displayName="Mentioned"
+description='''
+When mentioned in chat, get notified by a ping!'''

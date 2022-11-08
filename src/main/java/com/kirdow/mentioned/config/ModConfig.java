@@ -1,7 +1,7 @@
 package com.kirdow.mentioned.config;
 
 import com.kirdow.mentioned.Mentioned;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,7 +16,7 @@ public class ModConfig {
 
     public static long DELAY;
 
-    public static Formatting COLOR;
+    public static ChatFormatting COLOR;
 
     public static boolean STYLE_COLOR;
     public static boolean STYLE_BOLD;
@@ -78,25 +78,25 @@ public class ModConfig {
         return input.isEmpty() ? Collections.emptyList() : Arrays.asList(input.split(";"));
     }
 
-    private static Formatting getColorFromConfig(String input) {
-        if (input == null || input.isEmpty()) return Formatting.GOLD;
+    private static ChatFormatting getColorFromConfig(String input) {
+        if (input == null || input.isEmpty()) return ChatFormatting.GOLD;
 
         return switch (input) {
-            case "aqua" -> Formatting.AQUA;
-            case "black" -> Formatting.BLACK;
-            case "blue" -> Formatting.BLUE;
-            case "dark aqua" -> Formatting.DARK_AQUA;
-            case "dark blue" -> Formatting.DARK_BLUE;
-            case "dark gray", "dark_grey" -> Formatting.DARK_GRAY;
-            case "dark green" -> Formatting.DARK_GREEN;
-            case "dark purple" -> Formatting.DARK_PURPLE;
-            case "dark red" -> Formatting.DARK_RED;
-            case "gray", "grey" -> Formatting.GRAY;
-            case "green" -> Formatting.GREEN;
-            case "light purple", "purple" -> Formatting.LIGHT_PURPLE;
-            case "red" -> Formatting.RED;
-            case "yellow" -> Formatting.YELLOW;
-            default -> Formatting.GOLD;
+            case "aqua" -> ChatFormatting.AQUA;
+            case "black" -> ChatFormatting.BLACK;
+            case "blue" -> ChatFormatting.BLUE;
+            case "dark aqua" -> ChatFormatting.DARK_AQUA;
+            case "dark blue" -> ChatFormatting.DARK_BLUE;
+            case "dark gray", "dark_grey" -> ChatFormatting.DARK_GRAY;
+            case "dark green" -> ChatFormatting.DARK_GREEN;
+            case "dark purple" -> ChatFormatting.DARK_PURPLE;
+            case "dark red" -> ChatFormatting.DARK_RED;
+            case "gray", "grey" -> ChatFormatting.GRAY;
+            case "green" -> ChatFormatting.GREEN;
+            case "light purple", "purple" -> ChatFormatting.LIGHT_PURPLE;
+            case "red" -> ChatFormatting.RED;
+            case "yellow" -> ChatFormatting.YELLOW;
+            default -> ChatFormatting.GOLD;
         };
     }
 
