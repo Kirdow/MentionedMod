@@ -8,6 +8,10 @@
   "config.ktnmentioned.next": "Next",
   "config.ktnmentioned.update": "Update",
 
+  "_comment": "Key Bindings",
+  "key.categories.ktnmentioned": "Mentioned Mod",
+  "key.ktnmentioned.config.open": "Open Config",
+
   "_comment": "Config Sections",
   "config.ktnmentioned.section.general": "General Options",
   "config.ktnmentioned.section.style": "Style Options",
