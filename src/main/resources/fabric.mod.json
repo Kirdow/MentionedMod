@@ -9,7 +9,8 @@
     "Kirdow"
   ],
   "contact": {
-    "sources": "https://github.com/Kirdow/MentionedMod"
+    "sources": "https://github.com/Kirdow/MentionedMod",
+    "website": "https://www.curseforge.com/minecraft/mc-mods/mentioned"
   },
 
   "license": "MIT",
@@ -17,7 +18,7 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
+    "client": [
       "com.kirdow.mentioned.Mentioned"
     ]
   },

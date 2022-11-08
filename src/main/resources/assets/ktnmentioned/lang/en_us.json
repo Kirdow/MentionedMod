@@ -1,0 +1,36 @@
+{
+  "_comment": "Base data",
+  "config.ktnmentioned.base.modname": "Mentioned",
+  "config.ktnmentioned.base.config_title": "Mentioned Config",
+
+  "_comment": "Misc Buttons",
+  "config.ktnmentioned.prev": "Previous",
+  "config.ktnmentioned.next": "Next",
+  "config.ktnmentioned.update": "Update",
+
+  "_comment": "Key Bindings",
+  "key.categories.ktnmentioned": "Mentioned Mod",
+  "key.ktnmentioned.config.open": "Open Config",
+
+  "_comment": "Config Sections",
+  "config.ktnmentioned.section.general": "General Options",
+  "config.ktnmentioned.section.style": "Style Options",
+
+  "_comment": "Config Options",
+  "config.ktnmentioned.filter.filters.short": "Filters",
+  "config.ktnmentioned.filter.filters.long": "All filters in use seperated by semicolon (;).",
+  "config.ktnmentioned.filter.self.short": "Filter Own Name",
+  "config.ktnmentioned.filter.self.long": "When enabled, includes your own name into the filter.",
+  "config.ktnmentioned.style.enable.color.short": "Enable Color",
+  "config.ktnmentioned.style.enable.color.long": "When enabled, your filtered message will change color.",
+  "config.ktnmentioned.style.color.short": "Formatting Color",
+  "config.ktnmentioned.style.color.long": "Color to use when styling a filtered message (Requires Enable Color).",
+  "config.ktnmentioned.style.enable.bold.short": "Enable Bold",
+  "config.ktnmentioned.style.enable.bold.long": "When enabled, your filtered message will appear bold.",
+  "config.ktnmentioned.style.enable.italic.short": "Enable Italic",
+  "config.ktnmentioned.style.enable.italic.long": "When enabled, your filtered message will appear italic.",
+  "config.ktnmentioned.style.enable.strike.short": "Enable Strikethrough",
+  "config.ktnmentioned.style.enable.strike.long": "When enabled, your filtered message will appear strikethrough.",
+  "config.ktnmentioned.style.enable.under.short": "Enable Underline",
+  "config.ktnmentioned.style.enable.under.long": "When enabled, your filtered message will appear underlined."
+}
