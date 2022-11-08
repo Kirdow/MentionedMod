@@ -3,15 +3,11 @@ package com.kirdow.mentioned.config.gui;
 import com.kirdow.mentioned.config.ConfigSpec;
 import com.kirdow.mentioned.config.ModOptions;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.EditBox;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 
 import java.util.*;
@@ -51,7 +47,7 @@ public class MentionedConfigMenu extends Screen {
     }
 
     public MentionedConfigMenu(Screen previous) {
-        super(Text.translatable("config.ktnmentioned.base.config_title"));
+        super(new TranslatableText("config.ktnmentioned.base.config_title"));
         previousMenu = previous;
     }
 
@@ -63,7 +59,7 @@ public class MentionedConfigMenu extends Screen {
 
         for (var entry : delegateMap.entrySet()) {
             var value = entry.getValue();
-            value.button.setMessage(value.button.active ? (Text)value.messageDelegate.get() : Text.literal(""));
+            value.button.setMessage(value.button.active ? (Text)value.messageDelegate.get() : new LiteralText(""));
         }
     }
 
@@ -82,7 +78,7 @@ public class MentionedConfigMenu extends Screen {
         this.mouseY = mouseY;
 
         renderBackground(ms, 0);
-        var titleText = Text.translatable("config.ktnmentioned.base.config_title");
+        var titleText = new TranslatableText("config.ktnmentioned.base.config_title");
         var font = MinecraftClient.getInstance().textRenderer;
         font.drawWithShadow(ms, titleText, (width - font.getWidth(titleText.getString())) / 2, 20, 0xf0f0f0);
 
@@ -103,7 +99,7 @@ public class MentionedConfigMenu extends Screen {
             var hoverTextLines = font.getTextHandler().wrapLines(activeTooltip, 134, Style.EMPTY);
             List<Text> textLines = new ArrayList<>();
             for (var textLine : hoverTextLines) {
-                textLine.visit((style, str) -> Optional.of((Text)(Text.literal(str)).setStyle(style)), Style.EMPTY)
+                textLine.visit((style, str) -> Optional.of((Text)(new LiteralText(str)).setStyle(style)), Style.EMPTY)
                         .ifPresent(textLines::add);
             }
             renderTooltip(ms, textLines, mouseX, mouseY);
@@ -124,9 +120,9 @@ public class MentionedConfigMenu extends Screen {
     }
 
     private void addButtons() {
-        addButtonClickable(10, 10, () -> Text.translatable("gui.back"), btn -> close(), null);
+        addButtonClickable(10, 10, () -> new TranslatableText("gui.back"), btn -> close(), null);
 
-        generatePageEntry(2, pos -> addButtonClickable(2, () -> Text.translatable("config.ktnmentioned.update"), btn -> {
+        generatePageEntry(2, pos -> addButtonClickable(2, () -> new TranslatableText("config.ktnmentioned.update"), btn -> {
             Set<String> filters = Arrays.stream(filtersEditBox.getText().split(";")).collect(Collectors.toSet());
             ModOptions.filtersValue.set(filters.toArray(new String[0]));
             MentionedConfigMenu.this.filters = null;
@@ -146,11 +142,11 @@ public class MentionedConfigMenu extends Screen {
         generatePageEntry(9, pos -> addButtonConfigToggle(9, ModOptions.useStrikeThroughValue));
         generatePageEntry(10, pos -> addButtonConfigToggle(10, ModOptions.useUnderlineValue));
 
-        addButtonClickable(Math.max(10, centerX - 400), height - 30, () -> Text.translatable("config.ktnmentioned.prev"), btn -> {
+        addButtonClickable(Math.max(10, centerX - 400), height - 30, () -> new TranslatableText("config.ktnmentioned.prev"), btn -> {
             if (checkPage(-1)) --currentPage;
             reloadPage();
         }, () -> checkPage(-1));
-        addButtonClickable(Math.min(width - 110, centerX + 300), height - 30, () -> Text.translatable("config.ktnmentioned.next"), btn -> {
+        addButtonClickable(Math.min(width - 110, centerX + 300), height - 30, () -> new TranslatableText("config.ktnmentioned.next"), btn -> {
             if (checkPage(1)) ++currentPage;
             reloadPage();
         }, () -> checkPage(1));
@@ -214,22 +210,22 @@ public class MentionedConfigMenu extends Screen {
     protected void drawButtonPrefix(MatrixStack ms, int pos, Object key, Object hover) {
         MutableText keyComp = null;
         if (key instanceof String keyString) {
-            keyComp = Text.translatable(keyString);
+            keyComp = new TranslatableText(keyString);
         } else if (key instanceof MutableText mcomp) {
             keyComp = mcomp;
         } else if (key != null) {
-            keyComp = Text.literal(key.toString());
+            keyComp = new LiteralText(key.toString());
         } else {
             return;
         }
 
         MutableText hoverComp = null;
         if (hover instanceof String hoverString) {
-            hoverComp = Text.translatable(hoverString);
+            hoverComp = new TranslatableText(hoverString);
         } else if (hover instanceof MutableText mcomp) {
             hoverComp = mcomp;
         } else if (hover != null) {
-            hoverComp = Text.literal(hover.toString());
+            hoverComp = new LiteralText(hover.toString());
         }
 
         var style = Style.EMPTY.withColor(Formatting.WHITE);
@@ -264,7 +260,7 @@ public class MentionedConfigMenu extends Screen {
 
     protected ButtonWidget addButtonClickable(int x, int y, Supplier<Text> textSupplier, Consumer<ButtonWidget> clickEvent, Supplier<Boolean> enableDelegate) {
         if (enableDelegate == null) enableDelegate = () -> true;
-        if (textSupplier == null) textSupplier = () -> Text.literal("");
+        if (textSupplier == null) textSupplier = () -> new LiteralText("");
 
         var button = new ButtonWidget(x, y, 100, 20, textSupplier.get(), btn -> {
             if (clickEvent != null)
@@ -316,11 +312,11 @@ public class MentionedConfigMenu extends Screen {
                 data[i] = Character.toLowerCase(data[i]);
             }
         }
-        return Text.literal(String.format("%s%s", formatting, String.valueOf(data)));
+        return new LiteralText(String.format("%s%s", formatting, String.valueOf(data)));
     }
 
     private Text getMessageFromState(boolean state) {
-        return Text.translatable(state ? "gui.yes" : "gui.no").setStyle(Style.EMPTY.withColor(state ? Formatting.DARK_GREEN : Formatting.DARK_RED));
+        return new TranslatableText(state ? "gui.yes" : "gui.no").setStyle(Style.EMPTY.withColor(state ? Formatting.DARK_GREEN : Formatting.DARK_RED));
     }
 
     private int getOptionPosition(int pos, boolean isText) {

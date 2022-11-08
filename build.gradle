@@ -3,7 +3,7 @@ plugins {
 	id 'maven-publish'
 }
 
-def minecraftVersion = "1.19.2"
+def minecraftVersion = "1.18.2"
 def modVersion = "1.1"
 
 version = "${minecraftVersion}-${modVersion}"
