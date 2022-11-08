@@ -7,9 +7,9 @@ import com.kirdow.mentioned.config.gui.MentionedConfigMenu;
 import com.kirdow.mentioned.input.KeyBindings;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -51,14 +51,11 @@ public class Mentioned {
 		}
 
 		KeyBindings.init();
+		KeyBindings.register(ClientRegistry::registerKeyBinding);
 		MinecraftForge.EVENT_BUS.register(new Object() {
-			@SubscribeEvent
-			public void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
-				KeyBindings.register(event::register);
-			}
 
 			@SubscribeEvent
-			public void onKeyPress(InputEvent.Key event) {
+			public void onKeyPress(InputEvent.KeyInputEvent event) {
 				if (event.getAction() != GLFW.GLFW_PRESS) return;
 				Minecraft mc = Minecraft.getInstance();
 				if (mc.player == null || mc.level == null || mc.screen != null) return;
@@ -71,7 +68,7 @@ public class Mentioned {
 
 		ModConfig.registerConfig();
 
-		ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, ConfigMenuHelper::createConfigGuiFactory);
+		ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, ConfigMenuHelper::createConfigGuiFactory);
 	}
 
 	public static Path getModPath() {

@@ -8,16 +8,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.*;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -53,7 +48,7 @@ public class MentionedConfigMenu extends Screen {
     }
 
     public MentionedConfigMenu(Screen previous) {
-        super(Component.translatable("config.ktnmentioned.base.config_title"));
+        super(new TranslatableComponent("config.ktnmentioned.base.config_title"));
         previousMenu = previous;
     }
 
@@ -65,7 +60,7 @@ public class MentionedConfigMenu extends Screen {
 
         for (var entry : delegateMap.entrySet()) {
             var value = entry.getValue();
-            value.button.setMessage(value.button.active ? (Component)value.messageDelegate.get() : Component.literal(""));
+            value.button.setMessage(value.button.active ? (Component)value.messageDelegate.get() : new TextComponent(""));
         }
     }
 
@@ -84,7 +79,7 @@ public class MentionedConfigMenu extends Screen {
         this.mouseY = mouseY;
 
         renderBackground(ms, 0);
-        var titleText = Component.translatable("config.ktnmentioned.base.config_title");
+        var titleText = new TranslatableComponent("config.ktnmentioned.base.config_title");
         var font = Minecraft.getInstance().font;
         font.drawShadow(ms, titleText, (width - font.width(titleText.getString())) / 2, 20, 0xf0f0f0);
 
@@ -122,9 +117,9 @@ public class MentionedConfigMenu extends Screen {
     }
 
     private void addButtons() {
-        addButtonClickable(10, 10, () -> Component.translatable("gui.back"), btn -> onClose(), null);
+        addButtonClickable(10, 10, () -> new TranslatableComponent("gui.back"), btn -> onClose(), null);
 
-        generatePageEntry(2, pos -> addButtonClickable(2, () -> Component.translatable("config.ktnmentioned.update"), btn -> {
+        generatePageEntry(2, pos -> addButtonClickable(2, () -> new TranslatableComponent("config.ktnmentioned.update"), btn -> {
             Set<String> filters = Arrays.stream(filtersEditBox.getValue().split(";")).collect(Collectors.toSet());
             ModOptions.filtersValue.set(filters.toArray(new String[0]));
             MentionedConfigMenu.this.filters = null;
@@ -144,11 +139,11 @@ public class MentionedConfigMenu extends Screen {
         generatePageEntry(9, pos -> addButtonConfigToggle(9, ModOptions.useStrikeThroughValue));
         generatePageEntry(10, pos -> addButtonConfigToggle(10, ModOptions.useUnderlineValue));
 
-        addButtonClickable(Math.max(10, centerX - 400), height - 30, () -> Component.translatable("config.ktnmentioned.prev"), btn -> {
+        addButtonClickable(Math.max(10, centerX - 400), height - 30, () -> new TranslatableComponent("config.ktnmentioned.prev"), btn -> {
             if (checkPage(-1)) --currentPage;
             reloadPage();
         }, () -> checkPage(-1));
-        addButtonClickable(Math.min(width - 110, centerX + 300), height - 30, () -> Component.translatable("config.ktnmentioned.next"), btn -> {
+        addButtonClickable(Math.min(width - 110, centerX + 300), height - 30, () -> new TranslatableComponent("config.ktnmentioned.next"), btn -> {
             if (checkPage(1)) ++currentPage;
             reloadPage();
         }, () -> checkPage(1));
@@ -212,22 +207,22 @@ public class MentionedConfigMenu extends Screen {
     protected void drawButtonPrefix(PoseStack ms, int pos, Object key, Object hover) {
         MutableComponent keyComp = null;
         if (key instanceof String keyString) {
-            keyComp = Component.translatable(keyString);
+            keyComp = new TranslatableComponent(keyString);
         } else if (key instanceof MutableComponent mcomp) {
             keyComp = mcomp;
         } else if (key != null) {
-            keyComp = Component.literal(key.toString());
+            keyComp = new TextComponent(key.toString());
         } else {
             return;
         }
 
         MutableComponent hoverComp = null;
         if (hover instanceof String hoverString) {
-            hoverComp = Component.translatable(hoverString);
+            hoverComp = new TranslatableComponent(hoverString);
         } else if (hover instanceof MutableComponent mcomp) {
             hoverComp = mcomp;
         } else if (hover != null) {
-            hoverComp = Component.literal(hover.toString());
+            hoverComp = new TextComponent(hover.toString());
         }
 
         var style = Style.EMPTY.withColor(ChatFormatting.WHITE);
@@ -262,7 +257,7 @@ public class MentionedConfigMenu extends Screen {
 
     protected Button addButtonClickable(int x, int y, Supplier<Component> textSupplier, Consumer<Button> clickEvent, Supplier<Boolean> enableDelegate) {
         if (enableDelegate == null) enableDelegate = () -> true;
-        if (textSupplier == null) textSupplier = () -> Component.literal("");
+        if (textSupplier == null) textSupplier = () -> new TextComponent("");
 
         var button = new Button(x, y, 100, 20, textSupplier.get(), btn -> {
             if (clickEvent != null)
@@ -314,11 +309,11 @@ public class MentionedConfigMenu extends Screen {
                 data[i] = Character.toLowerCase(data[i]);
             }
         }
-        return Component.literal(String.format("%s%s", formatting, String.valueOf(data)));
+        return new TextComponent(String.format("%s%s", formatting, String.valueOf(data)));
     }
 
     private Component getMessageFromState(boolean state) {
-        return Component.translatable(state ? "gui.yes" : "gui.no").setStyle(Style.EMPTY.withColor(state ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
+        return new TranslatableComponent(state ? "gui.yes" : "gui.no").setStyle(Style.EMPTY.withColor(state ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
     }
 
     private int getOptionPosition(int pos, boolean isText) {

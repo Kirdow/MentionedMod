@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LocalPlayer.class)
 public class LocalPlayerMixin {
 
-    @Inject(method = "sendChat(Ljava/lang/String;Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"))
+    @Inject(method = "chat(Ljava/lang/String;)V", at = @At("HEAD"))
     private void chatMessagePacketHook(CallbackInfo ci) {
         Mentioned.skip(1000L);
     }

@@ -1,11 +1,11 @@
 package com.kirdow.mentioned.config.gui;
 
-import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.ConfigGuiHandler;
 
 public class ConfigMenuHelper {
 
-    public static ConfigScreenHandler.ConfigScreenFactory createConfigGuiFactory() {
-        return new ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> new MentionedConfigMenu(screen));
+    public static ConfigGuiHandler.ConfigGuiFactory createConfigGuiFactory() {
+        return new ConfigGuiHandler.ConfigGuiFactory((minecraft, screen) -> new MentionedConfigMenu(screen));
     }
 
 }

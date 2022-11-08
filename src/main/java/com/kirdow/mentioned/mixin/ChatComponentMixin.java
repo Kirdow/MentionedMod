@@ -22,7 +22,7 @@ import java.util.List;
 @Mixin(ChatComponent.class)
 public class ChatComponentMixin {
 
-    @ModifyVariable(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;ILnet/minecraft/client/GuiMessageTag;Z)V", at = @At("HEAD"), ordinal = 0)
+    @ModifyVariable(method = "addMessage(Lnet/minecraft/network/chat/Component;IIZ)V", at = @At("HEAD"), ordinal = 0)
     private Component modifyAddMessageText(Component text) {
         if (Mentioned.skips()) {
             return text;
