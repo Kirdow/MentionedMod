@@ -4,7 +4,7 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[6.0.14,6.2)', changing: true
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[6.0.16,6.2)', changing: true
 		classpath 'org.spongepowered:mixingradle:0.7.+'
 	}
 }
@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-def minecraftVersion = "1.20.2"
+def minecraftVersion = "1.20.3"
 def modVersion = "1.1"
 
 version = "${minecraftVersion}-${modVersion}"
@@ -42,7 +42,7 @@ mixin {
 }
 
 minecraft {
-	mappings channel: 'official', version: '1.20.2'
+	mappings channel: 'official', version: '1.20.3'
 
 	runs {
 		client {
@@ -74,7 +74,7 @@ minecraft {
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.20.2-48.0.30'
+	minecraft 'net.minecraftforge:forge:1.20.3-49.0.2'
 	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
