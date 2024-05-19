@@ -81,7 +81,7 @@ public class MentionedConfigMenu extends Screen {
         this.mouseX = mouseX;
         this.mouseY = mouseY;
 
-        renderBackground(ms, 0);
+        renderBackground(ms);
         var titleText = Text.translatable("config.ktnmentioned.base.config_title");
         var font = MinecraftClient.getInstance().textRenderer;
         font.drawWithShadow(ms, titleText, (width - font.getWidth(titleText.getString())) / 2, 20, 0xf0f0f0);
