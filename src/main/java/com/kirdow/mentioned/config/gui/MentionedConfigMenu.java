@@ -264,11 +264,14 @@ public class MentionedConfigMenu extends Screen {
         if (enableDelegate == null) enableDelegate = () -> true;
         if (textSupplier == null) textSupplier = () -> Component.literal("");
 
-        var button = new Button(x, y, 100, 20, textSupplier.get(), btn -> {
+        var button = Button.builder(textSupplier.get(), btn -> {
             if (clickEvent != null)
                 clickEvent.accept(btn);
             pollDelegates();
-        });
+        })
+            .pos(x, y)
+            .size(100, 20)
+            .build();
         addRenderableWidget(button);
         var delegate = new ButtonDelegate(31 * (31 * 17 + x) + y, enableDelegate, button, null, textSupplier::get);
         delegateMap.put(delegate.id, delegate);
@@ -281,10 +284,13 @@ public class MentionedConfigMenu extends Screen {
 
     protected Button addButtonConfigToggle(int pos, ConfigSpec.Accessor<Boolean> option, Supplier<Boolean> enableDelegate) {
         if (enableDelegate == null) enableDelegate = () -> true;
-        var button = new Button(centerX + 10, getOptionPosition(pos, false), 100, 20, getMessageFromState(option.get()), btn -> {
+        var button = Button.builder(getMessageFromState(option.get()), btn -> {
             option.set(!option.get());
             pollDelegates();
-        });
+        })
+            .pos(centerX + 10, getOptionPosition(pos, false))
+            .size(100, 20)
+            .build();
         addRenderableWidget(button);
         var delegate = new ButtonDelegate(pos, enableDelegate, button, option, () -> getMessageFromState(option.get()));
         delegateMap.put(delegate.id, delegate);
@@ -292,13 +298,16 @@ public class MentionedConfigMenu extends Screen {
     }
 
     protected Button addButtonConfigColor(int pos, ConfigSpec.Accessor<ChatFormatting> option, Supplier<Boolean> enableDelegate) {
-        var button = new Button(centerX + 10, getOptionPosition(pos, false), 100, 20, getMessageFromColor(option.get()), btn -> {
+        var button = Button.builder(getMessageFromColor(option.get()), btn -> {
             var color = option.get();
             int id = color.getId();
             id = (id + 1) % 16;
             option.set(ChatFormatting.getById(id));
             pollDelegates();
-        });
+        })
+            .pos(centerX + 10, getOptionPosition(pos, false))
+            .size(100, 20)
+            .build();
         addRenderableWidget(button);
         var delegate = new ButtonDelegate(pos, enableDelegate, button, option, () -> getMessageFromColor(option.get()));
         delegateMap.put(delegate.id, delegate);
