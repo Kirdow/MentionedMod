@@ -266,11 +266,14 @@ public class MentionedConfigMenu extends Screen {
         if (enableDelegate == null) enableDelegate = () -> true;
         if (textSupplier == null) textSupplier = () -> Text.literal("");
 
-        var button = new ButtonWidget(x, y, 100, 20, textSupplier.get(), btn -> {
+        var button = ButtonWidget.builder(textSupplier.get(), btn -> {
             if (clickEvent != null)
                 clickEvent.accept(btn);
             pollDelegates();
-        });
+        })
+            .position(x, y)
+            .size(100, 20)
+            .build();
         addDrawableChild(button);
         var delegate = new ButtonDelegate(31 * (31 * 17 + x) + y, enableDelegate, button, null, textSupplier::get);
         delegateMap.put(delegate.id, delegate);
@@ -283,10 +286,13 @@ public class MentionedConfigMenu extends Screen {
 
     protected ButtonWidget addButtonConfigToggle(int pos, ConfigSpec.Accessor<Boolean> option, Supplier<Boolean> enableDelegate) {
         if (enableDelegate == null) enableDelegate = () -> true;
-        var button = new ButtonWidget(centerX + 10, getOptionPosition(pos, false), 100, 20, getMessageFromState(option.get()), btn -> {
+        var button = ButtonWidget.builder(getMessageFromState(option.get()), btn -> {
             option.set(!option.get());
             pollDelegates();
-        });
+        })
+            .position(centerX + 10, getOptionPosition(pos, false))
+            .size(100, 20)
+            .build();
         addDrawableChild(button);
         var delegate = new ButtonDelegate(pos, enableDelegate, button, option, () -> getMessageFromState(option.get()));
         delegateMap.put(delegate.id, delegate);
@@ -294,13 +300,16 @@ public class MentionedConfigMenu extends Screen {
     }
 
     protected ButtonWidget addButtonConfigColor(int pos, ConfigSpec.Accessor<Formatting> option, Supplier<Boolean> enableDelegate) {
-        var button = new ButtonWidget(centerX + 10, getOptionPosition(pos, false), 100, 20, getMessageFromColor(option.get()), btn -> {
+        var button = ButtonWidget.builder(getMessageFromColor(option.get()), btn -> {
             var color = option.get();
             int id = color.getColorIndex();
             id = (id + 1) % 16;
             option.set(Formatting.byColorIndex(id));
             pollDelegates();
-        });
+        })
+            .position(centerX + 10, getOptionPosition(pos, false))
+            .size(100, 20)
+            .build();
         addDrawableChild(button);
         var delegate = new ButtonDelegate(pos, enableDelegate, button, option, () -> getMessageFromColor(option.get()));
         delegateMap.put(delegate.id, delegate);
