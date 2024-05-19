@@ -3,6 +3,7 @@ package com.kirdow.mentioned.config.gui;
 import com.kirdow.mentioned.config.ConfigSpec;
 import com.kirdow.mentioned.config.ModOptions;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.EditBox;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -76,28 +77,28 @@ public class MentionedConfigMenu extends Screen {
     }
 
     @Override
-    public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+    public void render(DrawContext ctx, int mouseX, int mouseY, float partialTicks) {
         activeTooltip = null;
         this.mouseX = mouseX;
         this.mouseY = mouseY;
 
-        renderBackground(ms);
+        renderBackground(ctx);
         var titleText = Text.translatable("config.ktnmentioned.base.config_title");
         var font = MinecraftClient.getInstance().textRenderer;
-        font.drawWithShadow(ms, titleText, (width - font.getWidth(titleText.getString())) / 2, 20, 0xf0f0f0);
+        ctx.drawText(font, titleText, (width - font.getWidth(titleText.getString())) / 2, 20, 0xf0f0f0, true);
 
-        generatePageEntry(0, pos -> drawButtonPrefix(ms, 0, "config.ktnmentioned.section.general", null));
-        generatePageEntry(1, pos -> drawButtonPrefix(ms, 1, "config.ktnmentioned.filter.filters.short", "config.ktnmentioned.filter.filters.long"));
-        generatePageEntry(3, pos -> drawButtonPrefix(ms, 3, "config.ktnmentioned.filter.self.short", "config.ktnmentioned.filter.self.long"));
-        generatePageEntry(4, pos -> drawButtonPrefix(ms, 4, "config.ktnmentioned.section.style", null));
-        generatePageEntry(5, pos -> drawButtonPrefix(ms, 5, "config.ktnmentioned.style.enable.color.short", "config.ktnmentioned.style.enable.color.long"));
-        generatePageEntry(6, pos -> drawButtonPrefix(ms, 6, "config.ktnmentioned.style.color.short", "config.ktnmentioned.style.color.long"));
-        generatePageEntry(7, pos -> drawButtonPrefix(ms, 7, "config.ktnmentioned.style.enable.bold.short", "config.ktnmentioned.style.enable.bold.long"));
-        generatePageEntry(8, pos -> drawButtonPrefix(ms, 8, "config.ktnmentioned.style.enable.italic.short", "config.ktnmentioned.style.enable.italic.long"));
-        generatePageEntry(9, pos -> drawButtonPrefix(ms, 9, "config.ktnmentioned.style.enable.strike.short", "config.ktnmentioned.style.enable.strike.long"));
-        generatePageEntry(10, pos -> drawButtonPrefix(ms, 10, "config.ktnmentioned.style.enable.under.short", "config.ktnmentioned.style.enable.under.long"));
+        generatePageEntry(0, pos -> drawButtonPrefix(ctx, 0, "config.ktnmentioned.section.general", null));
+        generatePageEntry(1, pos -> drawButtonPrefix(ctx, 1, "config.ktnmentioned.filter.filters.short", "config.ktnmentioned.filter.filters.long"));
+        generatePageEntry(3, pos -> drawButtonPrefix(ctx, 3, "config.ktnmentioned.filter.self.short", "config.ktnmentioned.filter.self.long"));
+        generatePageEntry(4, pos -> drawButtonPrefix(ctx, 4, "config.ktnmentioned.section.style", null));
+        generatePageEntry(5, pos -> drawButtonPrefix(ctx, 5, "config.ktnmentioned.style.enable.color.short", "config.ktnmentioned.style.enable.color.long"));
+        generatePageEntry(6, pos -> drawButtonPrefix(ctx, 6, "config.ktnmentioned.style.color.short", "config.ktnmentioned.style.color.long"));
+        generatePageEntry(7, pos -> drawButtonPrefix(ctx, 7, "config.ktnmentioned.style.enable.bold.short", "config.ktnmentioned.style.enable.bold.long"));
+        generatePageEntry(8, pos -> drawButtonPrefix(ctx, 8, "config.ktnmentioned.style.enable.italic.short", "config.ktnmentioned.style.enable.italic.long"));
+        generatePageEntry(9, pos -> drawButtonPrefix(ctx, 9, "config.ktnmentioned.style.enable.strike.short", "config.ktnmentioned.style.enable.strike.long"));
+        generatePageEntry(10, pos -> drawButtonPrefix(ctx, 10, "config.ktnmentioned.style.enable.under.short", "config.ktnmentioned.style.enable.under.long"));
 
-        super.render(ms, mouseX, mouseY, partialTicks);
+        super.render(ctx, mouseX, mouseY, partialTicks);
 
         if (activeTooltip != null) {
             var hoverTextLines = font.getTextHandler().wrapLines(activeTooltip, 134, Style.EMPTY);
@@ -106,7 +107,8 @@ public class MentionedConfigMenu extends Screen {
                 textLine.visit((style, str) -> Optional.of((Text)(Text.literal(str)).setStyle(style)), Style.EMPTY)
                         .ifPresent(textLines::add);
             }
-            renderTooltip(ms, textLines, mouseX, mouseY);
+
+            setTooltip(textLines.stream().map(p -> p.asOrderedText()).collect(Collectors.toList()));
         }
 
     }
@@ -211,7 +213,7 @@ public class MentionedConfigMenu extends Screen {
         }
     }
 
-    protected void drawButtonPrefix(MatrixStack ms, int pos, Object key, Object hover) {
+    protected void drawButtonPrefix(DrawContext ctx, int pos, Object key, Object hover) {
         MutableText keyComp = null;
         if (key instanceof String keyString) {
             keyComp = Text.translatable(keyString);
@@ -236,17 +238,17 @@ public class MentionedConfigMenu extends Screen {
         if (hoverComp != null) {
             style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverComp.setStyle(Style.EMPTY.withColor(Formatting.GREEN))));
         }
-        drawButtonPrefix(ms, keyComp.setStyle(style), pos, hoverComp == null);
+        drawButtonPrefix(ctx, keyComp.setStyle(style), pos, hoverComp == null);
     }
 
-    protected void drawButtonPrefix(MatrixStack ms, Text text, int pos, boolean isTitle) {
+    protected void drawButtonPrefix(DrawContext ctx, Text text, int pos, boolean isTitle) {
         var font = MinecraftClient.getInstance().textRenderer;
 
         int textWidth = font.getWidth(text.getString());
         int x = centerX - (isTitle ? (textWidth / 2) : (textWidth + 10));
         int y = getOptionPosition(pos, true);
 
-        font.drawWithShadow(ms, text, x, y, 0xf0f0f0);
+        ctx.drawText(font, text, x, y, 0xf0f0f0, true);
 
         if (!(mouseX >= x - 10 && mouseY >= y - 10 && mouseX <= x + textWidth + 10 && mouseY <= y + font.fontHeight + 10))
             return;
