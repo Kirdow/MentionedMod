@@ -1,16 +1,16 @@
 plugins {
-	id 'fabric-loom' version '1.0-SNAPSHOT'
+	id 'fabric-loom' version '1.6-SNAPSHOT'
 	id 'maven-publish'
 }
 
-def minecraftVersion = "1.20.4"
-def modVersion = "1.1"
+def minecraftVersion = "1.21"
+def modVersion = "1.2"
 
 version = "${minecraftVersion}-${modVersion}"
 group = "com.kirdow.ktnmentioned"
 archivesBaseName = "Mentioned-Fabric"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 repositories {
 	maven {

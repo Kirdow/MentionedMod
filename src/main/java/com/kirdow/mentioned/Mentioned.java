@@ -16,7 +16,7 @@ import java.nio.file.Path;
 public class Mentioned implements ClientModInitializer {
 	public static final String MOD_ID = "ktnmentioned";
 	public static final String MOD_NAME = "Mentioned";
-	public static final String MOD_VERSION = "1.1";
+	public static final String MOD_VERSION = "1.2";
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	private static Path modPath;
