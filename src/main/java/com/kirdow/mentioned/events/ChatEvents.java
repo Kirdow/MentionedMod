@@ -1,5 +1,6 @@
 package com.kirdow.mentioned.events;
 
+import com.kirdow.mentioned.Logger;
 import com.kirdow.mentioned.Mentioned;
 import com.kirdow.mentioned.PingSound;
 import com.kirdow.mentioned.config.ModOptions;
@@ -29,7 +30,8 @@ public class ChatEvents {
         names.addAll(Arrays.stream(ModOptions.filtersValue.get()).collect(Collectors.toList()));
         if (ModOptions.filterSelfValue.get())
             names.add(MinecraftClient.getInstance().player.getName().getString());
-        regex = Pattern.compile(String.format("(%s)", String.join("|", names)));
+        regex = Pattern.compile(String.format("(%s)", String.join("|", names)), Pattern.CASE_INSENSITIVE);
+        Logger.info("Regex: %s", regex.toString());
     }
 
     private ChatEvents(MutableText text, ChatEvents parent) {
@@ -62,7 +64,7 @@ public class ChatEvents {
     public void run() {
         MutableText result;
         if (text.getContent() instanceof PlainTextContent content) {
-            String stringContent = content.string().toLowerCase();
+            String stringContent = content.string();
 
             result = apply(stringContent, text);
         } else if (text.getContent() instanceof TranslatableTextContent content) {

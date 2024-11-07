@@ -1,9 +1,9 @@
 plugins {
-	id 'fabric-loom' version '1.6-SNAPSHOT'
+	id 'fabric-loom' version '1.8-SNAPSHOT'
 	id 'maven-publish'
 }
 
-def minecraftVersion = "1.21"
+def minecraftVersion = "1.21.2"
 def modVersion = "1.2"
 
 version = "${minecraftVersion}-${modVersion}"
