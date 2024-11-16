@@ -2,12 +2,11 @@ package com.kirdow.mentioned.events;
 
 import com.kirdow.mentioned.Mentioned;
 import com.kirdow.mentioned.PingSound;
-import com.kirdow.mentioned.config.ModOptions;
+import com.kirdow.mentioned.config.ConfigManager;
 import com.kirdow.mentioned.util.Either;
 import com.kirdow.mentioned.util.Ref;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -26,8 +25,8 @@ public class ChatEvents {
 
     private ChatEvents(MutableText text) {
         this.text = text;
-        names.addAll(Arrays.stream(ModOptions.filtersValue.get()).collect(Collectors.toList()));
-        if (ModOptions.filterSelfValue.get())
+        names.addAll(ConfigManager.get().filter);
+        if (ConfigManager.get().filterSelf)
             names.add(MinecraftClient.getInstance().player.getName().getString());
         regex = Pattern.compile(String.format("(%s)", String.join("|", names)), Pattern.CASE_INSENSITIVE);
     }
@@ -43,7 +42,7 @@ public class ChatEvents {
         events.run();
         if (events.ping) {
             PingSound.playPingSound();
-            int delay = ModOptions.delayValue.get();
+            long delay = ConfigManager.get().delay;
             if (delay > 0) {
                 Mentioned.skip(delay);
             }
@@ -129,11 +128,11 @@ public class ChatEvents {
     }
 
     private Style getStyle(Style style) {
-        if (ModOptions.useColorValue.get()) style = style.withColor(ModOptions.colorValue.get());
-        if (ModOptions.useBoldValue.get()) style = style.withBold(true);
-        if (ModOptions.useItalicValue.get()) style = style.withItalic(true);
-        if (ModOptions.useStrikeThroughValue.get()) style = style.withStrikethrough(true);
-        if (ModOptions.useUnderlineValue.get()) style = style.withUnderline(true);
+        if (ConfigManager.get().styleColor) style = style.withColor(ConfigManager.get().color);
+        if (ConfigManager.get().styleBold) style = style.withBold(true);
+        if (ConfigManager.get().styleItalic) style = style.withItalic(true);
+        if (ConfigManager.get().styleStrikethrough) style = style.withStrikethrough(true);
+        if (ConfigManager.get().styleUnderline) style = style.withUnderline(true);
 
         return style;
     }
